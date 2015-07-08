@@ -1,0 +1,11 @@
+Package: iCacheR
+Type: Package
+Title: Utils for caching
+Version: 0.1
+Date: 2015-07-08
+Author: Zygmunt Zawadzki
+Maintainer: Zygmunt Zawadzki <zawadzkizygmunt@gmail.com>
+Description: Utils for caching
+License: MIT
+LazyData: TRUE
+Depends: digest, parallel
