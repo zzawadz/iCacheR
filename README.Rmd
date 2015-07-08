@@ -1,0 +1,27 @@
+---
+title: "iCacheR"
+---
+
+## Simple example:
+
+```{r, cache=TRUE}
+slow_function = function(n)
+{
+  Sys.sleep(n) # sleep for n secs
+  rnorm(1000)
+}
+
+system.time(slow_function(2))
+```
+
+```{r, cache=TRUE}
+library(iCacheR)
+
+cache_function = ic_cache(slow_function)
+
+system.time(t1 <- cache_function(2)) # first use - normal time
+system.time(t2 <- cache_function(2)) # second - read cached value
+
+all(t1 == t2)
+```
+
