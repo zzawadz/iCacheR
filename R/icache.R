@@ -1,4 +1,4 @@
-ic_cache = function(fun, nodes = 2, path2cache = file.path(getwd(),".icacheR"))
+ic_cache = function(fun, path2cache = file.path(getwd(),".icacheR"))
 {
   force(fun)
   fnName = as.character(substitute(fun))
@@ -28,9 +28,10 @@ ic_cache = function(fun, nodes = 2, path2cache = file.path(getwd(),".icacheR"))
   return(result)
 }
 
-ic_lapply = function(x, fun, ...)
+ic_lapply = function(x, fun, ..., nodes = 2)
 {
   envfun = environment(fun)
+  envfun$nodes = nodes
   envfun$cluster = makeCluster(envfun$nodes)
 
   clusterEvalQ(envfun$cluster, {library(clusterCacher)})
