@@ -34,7 +34,7 @@ ic_lapply = function(x, fun, ..., nodes = 2)
   envfun$nodes = nodes
   envfun$cluster = makeCluster(envfun$nodes)
 
-  clusterEvalQ(envfun$cluster, {library(clusterCacher)})
+  clusterEvalQ(envfun$cluster, {library(iCacheR)})
 
   ncl = length(envfun$cluster)
   args = list(...)
