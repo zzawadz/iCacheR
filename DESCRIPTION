@@ -9,3 +9,4 @@ Description: Utils for caching
 License: MIT
 LazyData: TRUE
 Depends: digest, parallel
+Suggests: testthat
