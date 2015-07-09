@@ -1,4 +1,4 @@
-ic_cache = function(fun, path2cache = file.path(getwd(),".icacheR"))
+ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(getwd(),".icacheR"))
 {
   force(fun)
   fnName = as.character(substitute(fun))
