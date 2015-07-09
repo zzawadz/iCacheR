@@ -26,7 +26,9 @@ ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(g
 {
   if(is.null(env$repoPath))
   {
-    env$repoPath = file.path(getOption("iCacheR.repoPath"), env$fnName)
+    path = getOption("iCacheR.repoPath")
+    if(is.null(path)) path = tempdir()
+    env$repoPath = file.path(path, env$fnName)
     repoPath = env$repoPath
     .ic_create_repo(repoPath)
   }
