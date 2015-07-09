@@ -11,7 +11,7 @@ ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(g
   cluster = NULL
   function(...)
   {
-    .ic_cache_fun(repoPath, fun, ...)
+    .ic_cache_fun(repoPath, fun, fnName, ...)
   }
 }
 
