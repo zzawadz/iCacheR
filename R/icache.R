@@ -28,12 +28,22 @@ ic_cache = function(fun, path2cache = file.path(getwd(),".icacheR"))
   return(result)
 }
 
-ic_lapply = function(x, fun, ..., nodes = 2)
+ic_lapply = function(x, fun, ..., .packages = NULL, .nodes = 2)
 {
   envfun = environment(fun)
-  envfun$nodes = nodes
+  envfun$nodes = .nodes
   envfun$cluster = makeCluster(envfun$nodes)
-
+  
+  # export packages
+  if(!is.null(.packages))
+  {
+    evalExpr = paste(sprintf("library(%s)", .packages), collapse = "; ")
+    evalExpr = sprintf('function() {%s}', evalExpr)
+    evalExpr = parse(text = evalExpr)
+    loadLib = eval(evalExpr)
+    clusterCall(envfun$cluster, loadLib)
+  }
+  
   clusterEvalQ(envfun$cluster, {library(iCacheR)})
 
   ncl = length(envfun$cluster)
