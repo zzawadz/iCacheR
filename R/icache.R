@@ -9,9 +9,10 @@ ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(g
     .ic_create_repo(repoPath)
   }
   cluster = NULL
+  env = environment()
   function(...)
   {
-    .ic_cache_fun(repoPath, fun, fnName, ...)
+    .ic_cache_fun(repoPath, fun, env, ...)
   }
 }
 
@@ -21,11 +22,12 @@ ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(g
   return(invisible())
 }
 
-.ic_cache_fun = function(repoPath, fun, fnName, ...)
+.ic_cache_fun = function(repoPath, fun, env, ...)
 {
-  if(is.null(repoPath))
+  if(is.null(env$repoPath))
   {
-    repoPath <<- file.path(getOption("iCacheR.repoPath"), fnName)
+    env$repoPath = file.path(getOption("iCacheR.repoPath"), env$fnName)
+    repoPath = env$repoPath
     .ic_create_repo(repoPath)
   }
 
