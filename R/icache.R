@@ -21,7 +21,7 @@ ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(g
   return(invisible())
 }
 
-.ic_cache_fun = function(repoPath, fun, ...)
+.ic_cache_fun = function(repoPath, fun, fnName, ...)
 {
   if(is.null(repoPath))
   {
