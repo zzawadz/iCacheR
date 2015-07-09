@@ -35,10 +35,30 @@ ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(g
 
   params = list(...)
   paramsHash = digest(params)
+
+  cacheEnv = getOption("iCacheR.cache")
+
+  if( is.environment(cacheEnv) &
+      !is.null(value <- get0(paramsHash, cacheEnv)))
+  {
+    return(value)
+  }
+
   path = file.path(repoPath, paramsHash)
-  if(file.exists(path)) return(readRDS(path))
-  result = fun(...)
-  saveRDS(result, file = path)
+  if(file.exists(path))
+  {
+    readRDS(path)
+  } else
+  {
+    result = fun(...)
+    saveRDS(result, file = path)
+  }
+
+  if(is.environment(cacheEnv))
+  {
+    assign(paramsHash, result, envir = cacheEnv)
+  }
+
   return(result)
 }
 
