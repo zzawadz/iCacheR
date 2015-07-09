@@ -40,7 +40,7 @@ ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(g
   return(result)
 }
 
-ic_lapply = function(x, fun, ..., .packages = NULL, .expr = NULL, .nodes = 2)
+ic_lapply = function(x, fun, ..., .packages = NULL, .vars = NULL, .varsEnv = .GlobalEnv, .expr = NULL, .nodes = 2)
 {
   envfun = environment(fun)
   envfun$nodes = .nodes
@@ -54,6 +54,11 @@ ic_lapply = function(x, fun, ..., .packages = NULL, .expr = NULL, .nodes = 2)
     evalExpr = parse(text = evalExpr)
     loadLib = eval(evalExpr)
     clusterCall(envfun$cluster, loadLib)
+  }
+  
+  if(!is.null(.vars))
+  {
+    clusterExport(cl = envfun$cluster, varlist = .vars, envir = .varsEnv)
   }
   
   if(!is.null(.expr))
