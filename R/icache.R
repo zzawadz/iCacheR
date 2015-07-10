@@ -18,7 +18,7 @@ ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(g
 
 .ic_create_repo = function(repoPath)
 {
-  if(!dir.exists(repoPath)) dir.create(repoPath, recursive = TRUE)
+  if(!file.exists(repoPath)) dir.create(repoPath, recursive = TRUE)
   return(invisible())
 }
 
