@@ -129,6 +129,7 @@ ic_lapply = function(x, fun, ..., .cluster = NULL, .packages = NULL, .vars = NUL
         cat(sprintf("%s\n",t), file = paste0(timePath,"_",t,"_",as.character(runif(1)*1e6)))
 
       }
+      q(save = "no")
     }
   }
 
