@@ -1,3 +1,21 @@
+ic_cache_depr = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(getwd(),".icacheR"))
+{
+  force(fun)
+  fnName = as.character(substitute(fun))
+  repoPath = NULL
+  if(!is.null(path2cache))
+  {
+    repoPath = file.path(path2cache, fnName)
+    .ic_create_repo(repoPath)
+  }
+  cluster = NULL
+  .envCacher = environment()
+  function(...)
+  {
+    .ic_cache_fun(..., .envCacher = .envCacher)
+  }
+}
+
 ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(getwd(),".icacheR"))
 {
   force(fun)
@@ -9,11 +27,27 @@ ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(g
     .ic_create_repo(repoPath)
   }
   cluster = NULL
-  env = environment()
-  function(...)
+  .envCacher = environment()
+
+  cf_function = function(...) .ic_cache_fun(..., .envCacher = .envCacher)
+  paramsList = c(head(as.list(fun), -1))
+
+  namesParams = names(paramsList)
+  namesParams = sapply(namesParams, as.name)
+
+  if(any(names(namesParams) == "..."))
   {
-    .ic_cache_fun(repoPath, fun, env, ...)
+    k = which(names(namesParams) == "...")
+    names(namesParams)[k] = ""
   }
+
+  body = as.list(cf_function)[[2]]
+  body = as.list(body)
+  body = as.call(c(body[1], namesParams, body[3]))
+
+
+  cf_function = as.function(c(paramsList, body))
+  cf_function
 }
 
 .ic_create_repo = function(repoPath)
@@ -22,19 +56,21 @@ ic_cache = function(fun, path2cache = getOption("iCacheR.repoPath"))#file.path(g
   return(invisible())
 }
 
-.ic_cache_fun = function(repoPath, fun, env, ...)
+.ic_cache_fun = function(..., .envCacher)
 {
-  if(is.null(env$repoPath))
+  fun = .envCacher$fun
+
+  if(is.null(.envCacher$repoPath))
   {
     path = getOption("iCacheR.repoPath")
     if(is.null(path)) path = tempdir()
-    env$repoPath = file.path(path, env$fnName)
-    repoPath = env$repoPath
-    .ic_create_repo(repoPath)
+    .envCacher$repoPath = file.path(path, .envCacher$fnName)
+    .ic_create_repo(.envCacher$repoPath)
   }
+  repoPath = .envCacher$repoPath
 
   params = list(...)
-  params$.FNC = env$fnName
+  params$.FNC = .envCacher$fnName
   paramsHash = digest(params)
 
   cacheEnv = getOption("iCacheR.cache")
