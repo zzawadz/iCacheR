@@ -123,12 +123,10 @@ ic_lapply = function(x, fun, ..., .cluster = NULL, .packages = NULL, .vars = NUL
         t = Sys.time()
         do.call(fun, args = allArgs)
         t = round(as.numeric(Sys.time()) - as.numeric(t),2)
-
-
-
         cat(sprintf("%s\n",t), file = paste0(timePath,"_",t,"_",as.character(runif(1)*1e6)))
-
       }
+
+      q(save = "no")
     }
   }
 
