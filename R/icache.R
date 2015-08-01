@@ -149,19 +149,13 @@ ic_lapply = function(x, fun, ..., .cluster = NULL, .packages = NULL, .vars = NUL
 
     function()
     {
-      timePath = file.path(environment(fun)$repoPath, xhash)
-
       for(i in seq_along(xl))
       {
         allArgs = c(list(xl[[i]]), args)
-        pp = capture.output(print(lapply(allArgs, class)))
-
         t = Sys.time()
         do.call(fun, args = allArgs)
         t = round(as.numeric(Sys.time()) - as.numeric(t),2)
-
-
-
+        timePath = file.path(environment(fun)$repoPath, xhash)
         cat(sprintf("%s\n",t), file = paste0(timePath,"_",t,"_",as.character(runif(1)*1e6)))
 
       }
